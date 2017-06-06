@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import * as util from 'util';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -33,6 +34,9 @@ function MdMergeAll(){
     var configs = vscode.workspace.getConfiguration("MdMerge");
     var FolderPaths = configs.get<string[]>("FolderPaths");
 
+    var filesTomerge = 0;
+    var filesMerged = 0;
+
     if(FolderPaths.length===0)
     {
         vscode.window.showErrorMessage("No folders in settings. Please add at least one folder to settings");
@@ -51,12 +55,20 @@ function MdMergeAll(){
                     //skip
                 }
                 else{
+                    filesTomerge ++;
                     var destination = root + lines[lines.length-1].match(/\[(.*?)\]/)[1];
-                    writetofile(root + element  + "\\" + file,destination);
+                    try{
+                        writetofile(root + element  + "\\" + file,destination);
+                        filesMerged ++;
+                    }
+                    catch(err){
+                        vscode.window.showErrorMessage(err.toString());
+                    }
                 }
 
             });
-        }); 
+        });
+        vscode.window.showInformationMessage(util.format("MdMergeAll Complete. %d of %d merged",filesMerged, filesTomerge)); 
     }
 
        
