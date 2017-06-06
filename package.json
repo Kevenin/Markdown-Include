@@ -1,0 +1,87 @@
+{
+    "name": "markdowninclude",
+    "displayName": "Markdown Include",
+    "description": "Adds Functionality to create an .md file from multiple md files",
+    "version": "1.0.4",
+    "publisher": "Kevenin",
+    "repository": {
+        "url": "https://github.com/Kevenin/Markdown-Include",
+        "type": "github"
+    },
+    "engines": {
+        "vscode": "^1.12.0"
+    },
+    "categories": [
+        "Languages"
+    ],
+    "activationEvents": [
+        "onCommand:extension.MdMerge",
+        "onCommand:extension.MdMergeAll"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "languages": [
+            {
+                "id": "markdown",
+                "aliases": [
+                    "MarkDown",
+                    "Markdown"
+                ],
+                "extensions": [
+                    ".md"
+                ]
+            }
+        ],
+        "commands": [
+            {
+                "command": "extension.MdMerge",
+                "title": "MdMerge"
+            },
+            {
+                "command": "extension.MdMergeAll",
+                "title": "MdMergeAll"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "when": "resourceLangId == markdown",
+                    "command": "extension.MdMerge",
+                    "group": "navigation"
+                },
+                {
+                    "when": "resourceLangId == markdown",
+                    "command": "extension.MdMergeAll",
+                    "group": "navigation"
+                }
+            ]
+        },
+        "configuration": {
+            "type": "object",
+            "title": "MdMerge Configurations",
+            "properties": {
+                "MdMerge.FolderPaths": {
+                    "type": "array",
+                    "description": "Contains the folder paths from root to use when merge all command is used",
+                    "items": {
+                        "type": "string",
+                        "description": "Folder path from root"
+                    }
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0",
+        "mocha": "^2.3.3",
+        "@types/node": "^6.0.40",
+        "@types/mocha": "^2.2.32"
+    }
+}
