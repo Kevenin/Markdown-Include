@@ -30,6 +30,12 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(mdmergeall);
 }
 
+function AddFileExtension(filepath:string){
+    if(!filepath.endsWith(".md"))
+        filepath+=".md";
+    return filepath;
+}
+
 function MdMergeAll(){
     var configs = vscode.workspace.getConfiguration("MdMerge");
     var FolderPaths = configs.get<string[]>("FolderPaths");
@@ -47,16 +53,18 @@ function MdMergeAll(){
         FolderPaths.forEach(element => {
             fs.readdirSync(root + element).forEach(file=>{
                 let lines = fs.readFileSync(root + element  + "\\" + file).toString().split(os.EOL);
+                let lastline = GetLastNonEmptyLine(lines);
                 
                 if(!(path.extname(file) === ".md")){
                     //skip
                 }
-                else if(!lines[lines.length-1].startsWith("!export")){
+                else if(!lines[lastline].startsWith("!export")){
                     //skip
                 }
                 else{
                     filesTomerge ++;
-                    var destination = root + lines[lines.length-1].match(/\[(.*?)\]/)[1];
+                    var destination = root + lines[lastline].match(/\[(.*?)\]/)[1];
+                    destination = AddFileExtension(destination);
                     try{
                         writetofile(root + element  + "\\" + file,destination);
                         filesMerged ++;
@@ -69,16 +77,30 @@ function MdMergeAll(){
             });
         });
         vscode.window.showInformationMessage(util.format("MdMergeAll Complete. %d of %d merged",filesMerged, filesTomerge)); 
+    } 
+}
+
+function GetLastNonEmptyLine(lines:string[]){
+    let lastline = lines.length-1;
+
+    for(let i = lastline; i>=0;i--){
+        var line = lines[i];
+        if(line != ""){
+            lastline = i;
+            break;
+        }
+            
     }
 
-       
+    return lastline;
 }
 
 function MdMerge(){
     var editor = vscode.window.activeTextEditor;
     if(!(editor===undefined)){
         var document = editor.document;
-        var lastline = document.lineAt(document.lineCount-1).text;
+        let lines = fs.readFileSync(document.fileName).toString().split(os.EOL);
+        let lastline = GetLastNonEmptyLine(lines);
         var root = vscode.workspace.rootPath;
 
         if(!editor){
@@ -89,12 +111,13 @@ function MdMerge(){
             vscode.window.showErrorMessage("File is not a markdown file.");
             return;
         }
-        else if(!lastline.startsWith("!export")){
+        else if(!lines[lastline].startsWith("!export")){
             vscode.window.showErrorMessage("No !export tag found.");
             return;
         }
         else{
-            var destination = root + "\\" + lastline.match(/\[(.*?)\]/)[1];
+            var destination = root + "\\" + lines[lastline].match(/\[(.*?)\]/)[1];
+            destination = AddFileExtension(destination);
             if(fs.existsSync(destination)){
                 fs.writeFileSync(destination,"");
             }
