@@ -65,6 +65,9 @@ function MdMergeAll(){
                     filesTomerge ++;
                     var destination = root + lines[lastline].match(/\[(.*?)\]/)[1];
                     destination = AddFileExtension(destination);
+                    if(fs.existsSync(destination)){
+                        fs.writeFileSync(destination,"");
+                    }
                     try{
                         writetofile(root + element  + "\\" + file,destination);
                         filesMerged ++;
