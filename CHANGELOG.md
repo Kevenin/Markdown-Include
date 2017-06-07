@@ -1,7 +1,12 @@
 # Change Log
 
+##1.1.2
+
+###Fixed
+- Fixed issue #6 where MdMergeAll does not overwrite files when merging
+
 ## 1.1.1
-### Changed
+### Fixed
 
 - Fixed problem where last line is empty line
 - Fixed problem where file extension was not added if missing
