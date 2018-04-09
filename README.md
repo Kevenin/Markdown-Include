@@ -4,7 +4,6 @@
 [![Installs](https://vsmarketplacebadge.apphb.com/installs/Kevenin.markdowninclude.svg)](https://marketplace.visualstudio.com/items?itemName=Kevenin.markdowninclude)
 [![Rating](https://vsmarketplacebadge.apphb.com/rating/Kevenin.markdowninclude.svg)](https://marketplace.visualstudio.com/items?itemName=Kevenin.markdowninclude)
 
-
 This extention is used to merge Markdown files from various locations to one file.
 
 ## Features
@@ -20,6 +19,7 @@ This extention is used to merge Markdown files from various locations to one fil
   }
   ```
   - Run the command from anywhere in your workspace
+    - The commands may be run either from the command line (CTRL+SHIFT+P) or from the context menu (Right Click) while editing an .md file
 
 ## Extension Settings
 
