@@ -52,7 +52,8 @@ function MdMergeAll(){
 
         FolderPaths.forEach(element => {
             fs.readdirSync(root + element).forEach(file=>{
-                let lines = fs.readFileSync(root + element  + "\\" + file).toString().split(os.EOL);
+                var sourcepath = path.join(root,element,file);
+                let lines = fs.readFileSync(sourcepath).toString().split(os.EOL);
                 let lastline = GetLastNonEmptyLine(lines);
                 
                 if(!(path.extname(file) === ".md")){
@@ -69,7 +70,7 @@ function MdMergeAll(){
                         fs.writeFileSync(destination,"");
                     }
                     try{
-                        writetofile(root + element  + "\\" + file,destination);
+                        writetofile(sourcepath,destination);
                         filesMerged ++;
                     }
                     catch(err){
@@ -119,7 +120,7 @@ function MdMerge(){
             return;
         }
         else{
-            var destination = root + "\\" + lines[lastline].match(/\[(.*?)\]/)[1];
+            var destination = path.join(root,lines[lastline].match(/\[(.*?)\]/)[1]);
             destination = AddFileExtension(destination);
             if(fs.existsSync(destination)){
                 fs.writeFileSync(destination,"");
@@ -150,10 +151,11 @@ function writetofile(sourcepath:string, destination: string){
                 writetofile(root + filepath, destination);
             }
             else if(!lines[i].startsWith("!export")){
-                fs.appendFileSync(destination,lines[i]+os.EOL, function(err){
-                    if(err != null)
-                        console.log(err.message);
-                });
+                try{
+                    fs.appendFileSync(destination,lines[i]+os.EOL);
+                }catch(err){
+                    console.log(err.message);
+                }
             }
         }
         return true;

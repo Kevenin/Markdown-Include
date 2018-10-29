@@ -2,7 +2,7 @@
     "name": "markdowninclude",
     "displayName": "Markdown Include",
     "description": "Adds Functionality to create an .md file from multiple md files",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "publisher": "Kevenin",
     "repository": {
         "url": "https://github.com/Kevenin/Markdown-Include",
